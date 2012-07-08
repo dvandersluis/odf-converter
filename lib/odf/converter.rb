@@ -1,21 +1,21 @@
 require "rubyuno"
-require "odf/converter/version"
+require "odf/config"
 require "odf/converter/families"
 require "odf/converter/filters/base_filter"
 require "odf/converter/filters/import"
 require "odf/converter/filters/export"
 require "odf/converter/hash"
+require "odf/converter/version"
 
 module ODF
-  PropertyValue = Rubyuno.uno_require "com.sun.star.beans.PropertyValue"
-  
   class Converter
     class DocumentConversionError < Exception; end
     
     attr_reader :ctx, :smgr, :desktop, :document
     
     def initialize
-      @ctx = Uno::Connector.bootstrap("soffice", "socket", "localhost", 8100)
+      config = ODF.config
+      @ctx = Uno::Connector.bootstrap(config.office_bin.to_s, config.connection_type.to_s, config.host.to_s, config.port)
       @smgr = @ctx.getServiceManager
       @desktop = @smgr.createInstanceWithContext("com.sun.star.frame.Desktop", @ctx)
     end
@@ -35,10 +35,14 @@ module ODF
       perform_conversion(infile, outfile) && outfile
     end
     
+    def inspect
+      "#<#{self.class.name} #{self.class.config.office_bin}@#{self.class.config.host}:#{self.class.config.port}>"
+    end
+    
     def self.convert(*args)
       new.convert(*args)
     end
-  
+    
   private
     def detect_family(doc)
       return Families::WEB if doc.supportsService("com.sun.star.text.WebDocument")

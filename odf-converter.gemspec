@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.version       = ODF::Converter::VERSION
   
   gem.add_dependency "rubyuno"
-  gem.add_development_dependency "pry"
-  gem.add_development_dependency "pry-editline"
+  gem.add_dependency 'activesupport', ['>= 3.0.0']
+  
   gem.add_development_dependency "rspec"
 end

@@ -10,7 +10,10 @@ describe ODF::Converter do
     let(:c) { ODF::Converter.new }
     
     describe do
-      before { c.stub(:perform_conversion) { true } }
+      before do
+        Uno::Connector.stub_chain(:bootstrap, :getServiceManager, :createInstanceWithContext)
+        c.stub(:perform_conversion) { true }
+      end
       
       it "should raise an error if the to option is not given" do
         expect { c.convert("infile.txt") }.to raise_error ArgumentError
