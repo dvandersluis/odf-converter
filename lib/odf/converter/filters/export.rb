@@ -33,6 +33,9 @@ module ODF
           },
           ODF::Converter::Families::PRESENTATION => {
             FilterName: "impress_html_Export"
+          },
+          ODF::Converter::Families::DRAWING => {
+            FilterName: "XHTML" #HTML Document (OpenOffice.org Draw)"
           }
         }
         
@@ -107,6 +110,12 @@ module ODF
           },
           ODF::Converter::Families::DRAWING => {
             FilterName: "draw_flash_Export"
+          }
+        }
+        
+        ODG = {
+          ODF::Converter::Families::DRAWING => {
+            FilterName: "draw8"
           }
         }
       end

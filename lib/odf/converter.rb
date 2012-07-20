@@ -66,7 +66,7 @@ module ODF
       begin
         load(infile) && store(outfile)
       ensure
-        @document.close(true)
+        @document.close(true) unless @document
       end
     end
     
@@ -81,7 +81,8 @@ module ODF
         raise DocumentConversionError, e.message
       end
       
-      @document.refresh
+      @document.refresh if @document.respond_to? :refresh
+      
       family = detect_family(@document)
       
       if family == Families::SPREADSHEET
