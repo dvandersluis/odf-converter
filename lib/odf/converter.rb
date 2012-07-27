@@ -66,7 +66,7 @@ module ODF
       begin
         load(infile) && store(outfile)
       ensure
-        @document.close(true) unless @document
+        @document.close(true) if @document
       end
     end
     
