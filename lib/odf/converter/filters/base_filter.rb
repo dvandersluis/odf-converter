@@ -8,7 +8,7 @@ module ODF
         
         module ClassMethods
           def [](filter)
-            self.const_get(filter.to_s.upcase) rescue nil
+            self.const_get(filter.to_s.upcase, false) rescue nil
           end
         end
       end
