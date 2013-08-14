@@ -7,6 +7,8 @@ require "odf/converter/filters/export"
 require "odf/converter/hash"
 require "odf/converter/version"
 
+Rubyuno.uno_require 'com.sun.star.lang.IllegalArgumentException'
+
 module ODF
   class Converter
     class DocumentConversionError < Exception; end
@@ -15,7 +17,14 @@ module ODF
     
     def initialize
       config = ODF.config
-      @ctx = Uno::Connector.bootstrap(config.office_bin.to_s, config.connection_type.to_s, config.host.to_s, config.port)
+      @ctx = Uno::Connector.bootstrap(
+        office: config.office_bin.to_s,
+        type: config.connection_type.to_s,
+        host: config.host.to_s,
+        port: config.port,
+        spawn_cmd: config.spawn_cmd
+      )
+
       @smgr = @ctx.getServiceManager
       @desktop = @smgr.createInstanceWithContext("com.sun.star.frame.Desktop", @ctx)
     end
@@ -77,6 +86,7 @@ module ODF
       
       begin
         @document = desktop.loadComponentFromURL(input_url, "_blank", 0, props.to_uno_properties)
+        raise DocumentConversionError, "could not load document" unless @document
       rescue Rubyuno::Com::Sun::Star::Lang::IllegalArgumentException => e
         raise DocumentConversionError, e.message
       end

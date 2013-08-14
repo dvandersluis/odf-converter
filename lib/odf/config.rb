@@ -22,6 +22,7 @@ module ODF
     config_accessor :connection_type
     config_accessor :host
     config_accessor :port
+    config_accessor :spawn_cmd
   end
 
   # this is ugly. why can't we pass the default value to config_accessor...?
@@ -29,6 +30,7 @@ module ODF
     config.office_bin = "soffice"
     config.connection_type = :socket
     config.host = :localhost
-    config.port = 2083 
+    config.port = 2083
+    config.spawn_cmd = nil
   end
 end
